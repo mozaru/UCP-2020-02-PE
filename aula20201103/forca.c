@@ -39,7 +39,7 @@ int main()
     char Letra;
 
     //LerFraseSecreta(Frase);
-    LerFraseSecretaArq("palavras-utf8.txt", 8, 30, Frase);
+    LerFraseSecretaArq("br-sem-acentos.txt", 10, 30, Frase);
     Inicializar(&f, Frase );
     while (!Acabou(f))
     {
@@ -161,8 +161,11 @@ void LerFraseSecretaArq(char NomeArq[], int min, int max, char Frase[])
     FILE *arq;
     int tam, ok=0;
     char Linha[100];
-    srand(time(NULL));
-    
+    int x = (time(NULL) % 100) * 100;
+    srand(x);
+    char LetraInicial;
+
+    LetraInicial = (int)(26*((double)rand()/RAND_MAX))+65;
     arq = fopen( NomeArq, "rt" );  //r-readonly t-textfile
     if (arq==NULL)
     {
@@ -176,7 +179,7 @@ void LerFraseSecretaArq(char NomeArq[], int min, int max, char Frase[])
         tam = strlen(Linha);
         Linha[tam-1]='\0';
         tam--;
-        if (tam>=min && tam<=max && SemAcentos(Linha))
+        if (tam>=min && tam<=max && toupper(Linha[0]) == LetraInicial)
             if ( ((double)rand()/RAND_MAX) < 0.001 || Frase[0]=='\0')
             {
                 strcpy(Frase, Linha);
@@ -184,7 +187,6 @@ void LerFraseSecretaArq(char NomeArq[], int min, int max, char Frase[])
                     ok = 1;
             }
     }
-
     fclose(arq);    
 }
 
